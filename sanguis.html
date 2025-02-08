@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O Relógio Está Girando...</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black;
+            color: red;
+            font-family: 'Times New Roman', serif;
+            text-align: center;
+        }
+        #conteudo {
+            font-size: 24px;
+        }
+        #timer {
+            font-size: 48px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="conteudo">
+        <p>O tempo está correndo...</p>
+        <p id="timer"></p>
+    </div>
+
+    <script>
+        function iniciarContagem() {
+            let tempoRestante = localStorage.getItem("tempoRestante");
+            
+            if (!tempoRestante) {
+                tempoRestante = new Date().getTime() + (7 * 60 * 60 * 1000); // 7 horas a partir de agora
+                localStorage.setItem("tempoRestante", tempoRestante);
+            }
+
+            let timerInterval = setInterval(function () {
+                let agora = new Date().getTime();
+                let tempo = tempoRestante - agora;
+                let horas = Math.floor((tempo / (1000 * 60 * 60)));
+                let minutos = Math.floor((tempo % (1000 * 60 * 60)) / (1000 * 60));
+                let segundos = Math.floor((tempo % (1000 * 60)) / 1000);
+
+                document.getElementById("timer").innerHTML = horas + "h " + minutos + "m " + segundos + "s ";
+                
+                if (tempo < 0) {
+                    clearInterval(timerInterval);
+                    localStorage.removeItem("tempoRestante"); // Reseta a contagem
+                    mostrarMensagem();
+                }
+            }, 1000);
+        }
+
+        function mostrarMensagem() {
+            document.getElementById("conteudo").innerHTML = `
+                <p><i>"Ela ficou tão obcecada pela luxúria, a ponto de decretar a impunidade desse pecado,</i><br>
+                <i>para aliviar a vergonha que ela mesma sentia."</i></p>
+            `;
+        }
+
+        iniciarContagem();
+    </script>
+</body>
+</html>
